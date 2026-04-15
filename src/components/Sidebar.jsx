@@ -12,7 +12,7 @@ import EditProfile from "./EditProfile";
 const Sidebar = () => {
     const [search, setSearch] = useState("");
     const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
-    const { otherUsers } = useSelector(store => store.user)
+    const { otherUsers, selectedUser } = useSelector(store => store.user);
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
@@ -49,7 +49,7 @@ const Sidebar = () => {
     };
 
     return (
-        <div className="w-[320px] h-full border-r border-pink-500/20 bg-[#140a25]/80 backdrop-blur-xl p-5 flex flex-col">
+        <div className={`h-full border-r border-pink-500/20 bg-[#140a25]/80 backdrop-blur-xl p-5 flex-col ${selectedUser ? "hidden md:flex" : "flex"} w-full md:w-[320px] shrink-0`}>
             {/* Search */}
             <form onSubmit={searchSubmitHandler} className="flex items-center gap-3 mb-5">
                 <div className="flex items-center w-full rounded-xl bg-[#2b1646]/80 border border-pink-400/20 px-3">

@@ -1,9 +1,12 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setSelectedUser } from "../redux/userSlice";
+import { IoArrowBack } from "react-icons/io5";
 import SendInput from "./SendInput";
 import Messages from "./Messages";
 
 const MessageContainer = () => {
   const { selectedUser, authUser, onlineUsers } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const isOnline = onlineUsers?.includes(selectedUser?._id);
 
@@ -28,9 +31,15 @@ const MessageContainer = () => {
   return (
     <>
       {selectedUser ? (
-        <div className="flex-1 flex flex-col bg-[#140a25]/50">
+        <div className="flex flex-col bg-[#140a25]/50 w-full md:w-auto md:flex-1">
           {/* Header */}
           <div className="flex items-center gap-4 px-5 py-4 border-b border-pink-500/10 bg-[#1b0b2e]/80 backdrop-blur-xl">
+            <button 
+              className="md:hidden p-2 -ml-2 mr-1 text-white hover:bg-white/10 rounded-full transition"
+              onClick={() => dispatch(setSelectedUser(null))}
+            >
+              <IoArrowBack className="w-6 h-6" />
+            </button>
             <div className="avatar relative">
               <div className="w-12 rounded-full overflow-hidden border border-pink-500/20">
                 <img
@@ -58,7 +67,7 @@ const MessageContainer = () => {
           <SendInput />
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center bg-[#140a25]/40 text-center px-4">
+        <div className="hidden md:flex flex-col items-center justify-center bg-[#140a25]/40 text-center px-4 w-full md:w-auto md:flex-1">
           <div className="max-w-md">
             <h1 className="text-4xl font-bold text-white mb-3">
               Hi, {authUser?.fullName}
