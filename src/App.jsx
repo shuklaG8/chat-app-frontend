@@ -6,7 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import io from 'socket.io-client';
 import { setSocket } from './redux/socketSlice';
-import { setOnlineUsers } from './redux/userSlice';
+import { setOnlineUsers, setAuthUser } from './redux/userSlice';
+import axios from 'axios';
+
+axios.defaults.withCredentials = true;
 
 const router = createBrowserRouter([
   {
@@ -28,6 +31,29 @@ const App = () => {
   const {authUser} = useSelector((store) => store.user);
   const {socket} = useSelector((store) => store.socket);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (authUser && authUser.token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${authUser.token}`;
+    } else {
+      delete axios.defaults.headers.common['Authorization'];
+    }
+  }, [authUser]);
+
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response && error.response.status === 401) {
+          dispatch(setAuthUser(null));
+        }
+        return Promise.reject(error);
+      }
+    );
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if(authUser) {

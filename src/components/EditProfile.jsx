@@ -77,7 +77,7 @@ const EditProfile = ({ isOpen, onClose }) => {
 
             if (res.data) {
                 toast.success(res.data.message);
-                dispatch(setAuthUser(res.data));
+                dispatch(setAuthUser({ ...authUser, ...res.data }));
                 onClose();
             }
         } catch (error) {
